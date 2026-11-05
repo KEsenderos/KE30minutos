@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!-- KE30minutos  index.html  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0E16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="KE30minutos">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<title>KE30minutos</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-brand">
+    <img id="appLogo" class="app-logo" src="icons/icon-192.png" alt="" width="32" height="32">
+    <h1 id="appTitle"></h1>
+  </div>
+  <span id="appVersion" class="version"></span>
+</header>
+
+<button id="update-btn" class="update-btn" type="button" hidden></button>
+
+<main class="app-main">
+  <div id="msgArea" class="msg-area info" role="status" hidden></div>
+
+  <!-- ===== 再生タブ ===== -->
+  <section id="panel-play" class="tab-panel" role="tabpanel">
+    <div class="card">
+      <div class="remain">
+        <div id="remainLabel" class="remain-label"></div>
+        <div id="remainValue" class="remain-value">0:00</div>
+        <div id="progressText" class="progress-text"></div>
+      </div>
+      <div class="now-row">
+        <div id="nowTitle" class="now-title"></div>
+        <span id="lastBadge" class="badge-last" hidden></span>
+      </div>
+      <div id="nowBadge" class="now-badge"></div>
+      <input id="seekBar" class="seek-bar" type="range" min="0" max="1000" step="1" value="0" tabindex="-1" data-aria="ARIA_SEEK">
+      <div class="times"><span id="timeCur">--:--</span><span id="timeTotal">--:--</span></div>
+      <div class="transport">
+        <button id="btnStop" class="btn-sub" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg><span data-text="BTN_STOP"></span>
+        </button>
+        <button id="btnPlay" class="btn-play" type="button">
+          <svg id="iconPlay" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="iconPause" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+        </button>
+        <button id="btnNext" class="btn-sub" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg><span data-text="ARIA_NEXT"></span>
+        </button>
+      </div>
+      <div class="reset-row"><button id="btnReset" class="btn-sub" type="button" data-text="BTN_RESET"></button></div>
+      <p id="playReady" class="play-ready"></p>
+    </div>
+
+    <div class="card">
+      <div class="param param-key">
+        <div class="param-row">
+          <span id="pitchLabel" class="param-label" data-text="LABEL_PITCH"></span>
+          <button id="btnPitchDown" class="btn-step" type="button" data-aria="ARIA_PITCH_DOWN">−</button>
+          <span id="pitchValue" class="param-value">±0</span>
+          <button id="btnPitchUp" class="btn-step" type="button" data-aria="ARIA_PITCH_UP">＋</button>
+        </div>
+        <input id="pitchSlider" class="slider" type="range" min="-3" max="3" step="1" value="0" data-aria="LABEL_PITCH">
+      </div>
+      <div class="param param-speed">
+        <div class="param-row">
+          <span id="speedLabel" class="param-label" data-text="LABEL_SPEED"></span>
+          <button id="btnSpeedDown" class="btn-step" type="button" data-aria="ARIA_SPEED_DOWN">−</button>
+          <span id="speedValue" class="param-value">1.00倍</span>
+          <button id="btnSpeedUp" class="btn-step" type="button" data-aria="ARIA_SPEED_UP">＋</button>
+        </div>
+        <input id="speedSlider" class="slider" type="range" min="-3" max="3" step="1" value="0" data-aria="LABEL_SPEED">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="planTitle"></h2>
+      <p id="summaryText" class="summary-text" hidden></p>
+      <p id="planEmpty" class="plan-empty"></p>
+      <ol id="planList" class="plan-list"></ol>
+    </div>
+  </section>
+
+  <!-- ===== 曲タブ ===== -->
+  <section id="panel-songs" class="tab-panel" role="tabpanel" hidden>
+    <div class="card">
+      <div id="listTotal" class="list-total" style="margin-top:0"></div>
+      <div class="drive-btns">
+        <button id="btnDriveOpen" class="btn-sub" type="button" data-text="BTN_DRIVE_OPEN"></button>
+      </div>
+      <div id="drivePanel" class="drive-panel" hidden>
+        <div class="list-head">
+          <h2 data-text="DRIVE_PANEL_TITLE"></h2>
+        </div>
+        <div class="drive-btns">
+          <button id="btnDriveReload" class="btn-sub" type="button" data-text="BTN_DRIVE_RELOAD"></button>
+          <button id="btnDriveClose" class="btn-sub" type="button" data-text="BTN_DRIVE_CLOSE"></button>
+        </div>
+        <p id="driveNote2" class="drive-note"></p>
+        <h3 id="driveMainTitle" class="drive-note" style="margin-bottom:0"></h3>
+        <ul id="driveMainList" class="drive-list"></ul>
+        <h3 id="driveLastTitle" class="drive-note" style="margin-bottom:0"></h3>
+        <ul id="driveLastList" class="drive-list"></ul>
+        <div class="drive-btns">
+          <button id="btnDriveAll" class="btn-sub" type="button"></button>
+        </div>
+        <div id="driveProgress" class="drive-progress" hidden></div>
+        <div class="drive-btns"><button id="btnDriveCancel" class="btn-sub" type="button" data-text="BTN_DRIVE_CANCEL" hidden></button></div>
+        <div id="driveResult" class="status-line" style="white-space:pre-line"></div>
+      </div>
+    </div>
+
+    <div class="card list-block">
+      <div class="list-head">
+        <h2 id="listMainTitle"></h2>
+        <button id="btnAddMain" class="btn-add" type="button" data-text="BTN_ADD_MAIN"></button>
+      </div>
+      <input id="fileInputMain" type="file" multiple hidden>
+      <p id="listMainEmpty" class="list-empty"></p>
+      <ul id="listMain" class="song-list"></ul>
+    </div>
+
+    <div class="card list-block">
+      <div class="list-head">
+        <h2 id="listLastTitle"></h2>
+        <button id="btnAddLast" class="btn-add" type="button" data-text="BTN_ADD_LAST"></button>
+      </div>
+      <input id="fileInputLast" type="file" multiple hidden>
+      <p id="listLastEmpty" class="list-empty"></p>
+      <ul id="listLast" class="song-list"></ul>
+      <p id="listLockNote" class="list-lock-note" hidden></p>
+    </div>
+  </section>
+
+  <!-- ===== 記録タブ ===== -->
+  <section id="panel-records" class="tab-panel" role="tabpanel" hidden>
+    <div id="recBackupWarn" class="warn-box" role="button" tabindex="0" hidden></div>
+    <div class="card">
+      <div class="rec-head">
+        <button id="btnRecPrev" class="btn-nav" type="button" aria-label="前の月">◀</button>
+        <div id="recMonthLabel" class="rec-month"></div>
+        <button id="btnRecNext" class="btn-nav" type="button" aria-label="次の月">▶</button>
+      </div>
+      <p id="recSummary" class="rec-summary"></p>
+      <div id="recGrid" class="rec-grid"></div>
+    </div>
+    <div class="card">
+      <h2 id="recDayTitle"></h2>
+      <p id="recDayEmpty" class="list-empty"></p>
+      <ul id="recDayList" style="list-style:none;margin:0;padding:0"></ul>
+      <div class="rec-btns"><button id="btnRecAdd" class="btn-sub" type="button" data-text="BTN_REC_ADD"></button></div>
+      <div id="recForm" class="rec-form" hidden>
+        <label><span data-text="LABEL_REC_DATE"></span><input id="recFormDate" type="date"></label>
+        <label><span data-text="LABEL_REC_TARGET"></span><input id="recFormTarget" type="number" inputmode="numeric" min="5" max="120" step="1"></label>
+        <label><span data-text="LABEL_REC_PLAY"></span><input id="recFormPlay" type="number" inputmode="numeric" min="1" max="600" step="1"></label>
+        <label class="check"><input id="recFormDone" type="checkbox"><span data-text="LABEL_REC_DONE"></span></label>
+        <p id="recFormError" class="rec-error" hidden></p>
+        <div class="rec-btns">
+          <button id="btnRecSave" class="btn-add" type="button" data-text="BTN_REC_SAVE"></button>
+          <button id="btnRecCancel" class="btn-sub" type="button" data-text="BTN_REC_CANCEL"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 設定タブ ===== -->
+  <section id="panel-settings" class="tab-panel" role="tabpanel" hidden>
+    <div id="setBackupWarn" class="warn-box" role="button" tabindex="0" hidden></div>
+    <div class="card">
+      <div class="target-row">
+        <h2 id="targetLabel" data-text="LABEL_TARGET"></h2>
+        <button id="btnTargetDown" class="btn-step" type="button" data-aria="ARIA_TARGET_DOWN" style="border:2px solid var(--accent);color:var(--accent)">−</button>
+        <span id="targetValue" class="target-value"></span>
+        <button id="btnTargetUp" class="btn-step" type="button" data-aria="ARIA_TARGET_UP" style="border:2px solid var(--accent);color:var(--accent)">＋</button>
+      </div>
+      <p id="targetNote" class="target-note"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-text="SET_DRIVE_TITLE"></h2>
+      <label class="field"><span data-text="LABEL_GAS_URL"></span><input id="inGasUrl" type="url" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="url"></label>
+      <label class="field"><span data-text="LABEL_GAS_KEY"></span><input id="inGasKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <div class="drive-btns">
+        <button id="btnGasSave" class="btn-add" type="button" data-text="BTN_GAS_SAVE"></button>
+        <button id="btnSyncNow" class="btn-sub" type="button" data-text="BTN_SYNC_NOW"></button>
+      </div>
+      <p id="syncLast" class="status-line"></p>
+      <p id="syncStatus" class="status-line" style="margin-top:0"></p>
+      <div id="syncGuard" class="sync-guard" hidden>
+        <div id="syncGuardText"></div>
+        <div class="drive-btns">
+          <button id="btnSyncGuardOk" class="btn-add" type="button" data-text="BTN_SYNC_GUARD_OK"></button>
+          <button id="btnSyncGuardNo" class="btn-sub" type="button" data-text="BTN_SYNC_GUARD_NO"></button>
+        </div>
+      </div>
+      <p id="driveNote" class="drive-note"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-text="SET_BACKUP_TITLE"></h2>
+      <p id="backupLast" class="status-line" style="margin-top:8px"></p>
+      <div class="backup-btns">
+        <button id="btnBackupExport" class="btn-sub" type="button" data-text="BTN_BACKUP_EXPORT"></button>
+        <button id="btnBackupImport" class="btn-sub" type="button" data-text="BTN_BACKUP_IMPORT"></button>
+      </div>
+      <input id="fileInputBackup" type="file" accept=".json,application/json" hidden>
+      <p id="backupNote" class="backup-note"></p>
+      <p id="backupResult" class="status-line" style="white-space:pre-line"></p>
+    </div>
+
+    <div class="card">
+      <div id="appVersion2" class="version"></div>
+      <h2 data-text="HOWTO_TITLE" style="margin-top:8px"></h2>
+      <ol id="howto" class="howto"></ol>
+    </div>
+  </section>
+</main>
+
+<nav id="tab-bar" class="tab-bar" role="tablist">
+  <div class="tab-inner">
+    <button class="tab-btn" type="button" role="tab" data-tab="play" aria-selected="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span data-text="TAB_PLAY"></span>
+    </button>
+    <button class="tab-btn" type="button" role="tab" data-tab="songs" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3z"/></svg><span data-text="TAB_SONGS"></span>
+    </button>
+    <button class="tab-btn" type="button" role="tab" data-tab="records" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zM5 10h14v10H5z"/></svg><span data-text="TAB_RECORDS"></span>
+    </button>
+    <button class="tab-btn" type="button" role="tab" data-tab="settings" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"/></svg><span data-text="TAB_SETTINGS"></span>
+    </button>
+  </div>
+</nav>
+
+<audio id="ke30Silence" playsinline loop hidden></audio>
+
+<script src="js/config.js"></script>
+<script src="js/util.js"></script>
+<script src="js/store.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/media.js"></script>
+<script src="js/library.js"></script>
+<script src="js/planner.js"></script>
+<script src="js/records.js"></script>
+<script src="js/drive.js"></script>
+<script src="js/sync.js"></script>
+<script src="js/driveimport.js"></script>
+<script src="js/backup.js"></script>
+<script src="js/session.js"></script>
+<script src="js/player.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
