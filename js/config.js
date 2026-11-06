@@ -1,8 +1,8 @@
-// KE30minutos  config.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  config.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：定数 KE、表示文言 TEXT、エラーの種類 KeError（仕様書 第6章）。画面に出る文字はすべてここに置く。
 
 const KE = {
-  APP_VERSION: '0.4.1',
+  APP_VERSION: '0.5',
   PITCH_MIN: -3, PITCH_MAX: 3, PITCH_STEP: 1, PITCH_DEFAULT: 0,
   SPEED_MIN: 0.85, SPEED_MAX: 1.15, SPEED_STEP: 0.05, SPEED_DEFAULT: 1.0,
   TARGET_MIN_DEFAULT: 30, TARGET_MIN_MIN: 5, TARGET_MIN_MAX: 120, TARGET_MIN_STEP: 5,
@@ -24,6 +24,7 @@ const KE = {
   BACKUP_MAX_BYTES: 5 * 1024 * 1024,
   GAS_URL_PREFIX: 'https://script.google.com/macros/s/',
   GAS_URL_SUFFIX: '/exec',
+  DRIVE_FOLDER_URL_PATTERN: /^https:\/\/drive\.google\.com\/drive\/(u\/\d+\/)?folders\/[A-Za-z0-9_-]+$/,
   DRIVE_TIMEOUT_MS: 30000,
   DRIVE_AUDIO_TIMEOUT_MS: 90000,
   DRIVE_FOLDER_MAIN: 'メイン',
@@ -62,6 +63,7 @@ const KE = {
     LAST_BACKUP: 'ke30_lastBackupAt',
     GAS_URL: 'ke30_gasUrl',
     GAS_KEY: 'ke30_gasKey',
+    DRIVE_FOLDERS: 'ke30_driveFolders',
     TARGET_MIN_AT: 'ke30_targetMinAt',
     SYNC_DIRTY: 'ke30_syncDirty',
     LAST_SYNC: 'ke30_lastSyncAt',
@@ -185,6 +187,12 @@ const TEXT = {
   "BTN_GAS_SAVE": "保存してつなぐ",
   "BTN_SYNC_NOW": "今すぐ同期",
   "DRIVE_NOT_SET": "ドライブはまだつないでいません",
+  "DRIVE_FOLDERS_BTN": "このドライブを開く",
+  "DRIVE_FOLDER_MAIN_LINK": "メインを開く",
+  "DRIVE_FOLDER_LAST_LINK": "ラストを開く",
+  "DRIVE_FOLDERS_LOADING": "フォルダの場所を調べています…",
+  "DRIVE_FOLDERS_OLD_GAS": "フォルダの場所が取れません。中継役のGASを新しい版にしてください（手順書 15-8）",
+  "DRIVE_FOLDERS_LOCKED": "再生中はフォルダの場所を調べません。再生が終わってから、もう一度押してください",
   "DRIVE_NOTE": "記録・曲ごとのキーと速度・再生時間が、ドライブを通して端末どうしでそろいます。曲のファイルは「曲」タブから取り込みます。URLと合言葉は人に見せないでください",
   "SYNC_LAST": "最後の同期：{ago}",
   "SYNC_NEVER": "まだ同期していません",

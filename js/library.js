@@ -1,4 +1,4 @@
-// KE30minutos  library.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  library.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：曲の登録（メインの曲・ラストの曲）の追加・削除・入れ替え（仕様書 第11-1・11-8節）
 const Library = {
   songs_: [],            // 登録している曲（inMain か inLast が真）。名前順

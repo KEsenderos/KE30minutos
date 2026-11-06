@@ -1,4 +1,4 @@
-// KE30minutos  store.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  store.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：IndexedDB（曲・曲のファイル・記録・削除の印）の読み書き。書き込みは、まとまりごとに1回の書き込み（トランザクション）で行う。
 
 const Store = {

@@ -1,4 +1,4 @@
-// KE30minutos  ke30-processor.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  ke30-processor.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：曲の音声データを持ち、キー（半音）と速度を別々に変えて、リアルタイムに音を作る。
 // 方式：WSOLA（波形の似た位置を探してつなぐ重ね合わせ方式）＋線形補間による読み出し。
 // 元：KElástico 仕様書 v0.2.5 第8-2節の StretchCore（変更なし）。Ke30Processor に「次の曲を1つ預かる口」を足した（仕様書 第10-2節）。

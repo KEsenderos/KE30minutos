@@ -1,4 +1,4 @@
-// KE30minutos  drive.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  drive.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：中継役（GAS「KE30minutos中継」）との通信。URL・合言葉の保存。失敗は例外にせず { ok:false, code } で返す（仕様書 第11-16節）
 const Drive = {
   getSettings() {
@@ -13,6 +13,7 @@ const Drive = {
     if (!url || !key) return { ok: false, code: 'NO_SETTINGS' };
     if (!this.validUrl_(url)) return { ok: false, code: 'BAD_URL' };
     if (!Util.lsSet(KE.LS.GAS_URL, url) || !Util.lsSet(KE.LS.GAS_KEY, key)) return { ok: false, code: 'NO_SETTINGS' };
+    this.clearFolders_();
     return { ok: true };
   },
   isReady() {
@@ -60,8 +61,38 @@ const Drive = {
   async list() {
     const r = await this.call_('list', {});
     if (!r.ok) return r;
-    return { ok: true, main: r.main || { found: false, files: [] }, last: r.last || { found: false, files: [] } };
+    const main = r.main || { found: false, files: [] };
+    const last = r.last || { found: false, files: [] };
+    this.rememberFolders_(main.found ? main.url : null, last.found ? last.url : null);
+    return { ok: true, main, last };
   },
+
+  // ---- フォルダの場所（［このドライブを開く］用。仕様書 第11-19節）----
+  // GASから来た場所は、ドライブのフォルダの形のものだけを使う（? 以降は捨てる）。合わなければ null
+  validFolderUrl_(u) {
+    if (typeof u !== 'string') return null;
+    const s = u.split('?')[0];
+    return KE.DRIVE_FOLDER_URL_PATTERN.test(s) ? s : null;
+  },
+  // どちらも使えない形なら、覚えていた場所も消す。バックアップ・同期には入れない
+  rememberFolders_(mainUrl, lastUrl) {
+    const m = this.validFolderUrl_(mainUrl);
+    const l = this.validFolderUrl_(lastUrl);
+    if (!m && !l) { this.clearFolders_(); return; }
+    Util.lsSet(KE.LS.DRIVE_FOLDERS, JSON.stringify({ main: m, last: l, at: Date.now() }));
+  },
+  folderLinks() {
+    const raw = Util.lsGet(KE.LS.DRIVE_FOLDERS);
+    if (!raw) return null;
+    let o;
+    try { o = JSON.parse(raw); } catch (e) { return null; }
+    if (!o || typeof o !== 'object') return null;
+    const m = this.validFolderUrl_(o.main);
+    const l = this.validFolderUrl_(o.last);
+    if (!m && !l) return null;
+    return { main: m, last: l, at: typeof o.at === 'number' ? o.at : 0 };
+  },
+  clearFolders_() { Util.lsRemove(KE.LS.DRIVE_FOLDERS); },
 
   // 曲を4MBずつ受け取ってつなぎ、Fileにする
   async fetchSong(fileId, opts) {

@@ -1,4 +1,4 @@
-// KE30minutos  util.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  util.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：小さな共通処理（文字の差し込み、時間・キー・速度の表示、localStorage、曲のID、無音のWAV）。
 
 const Util = {

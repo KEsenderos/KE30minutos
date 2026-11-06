@@ -1,4 +1,4 @@
-// KE30minutos  driveimport.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  driveimport.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：ドライブの曲を、1曲ずつ端末へ取り込む（一覧、状態、中止）。仕様書 第11-17節
 const DriveImport = {
   busy: false,

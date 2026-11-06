@@ -1,4 +1,4 @@
-// KE30minutos  sync.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  sync.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：端末どうし（ドライブの同期ファイル経由）で、記録・曲のキーと速度・再生時間を「足し合わせる」計算だけを行う部分（通信や保存を使わない）。下の Sync が、いつ読み、どう足し、端末とドライブに書くかを受け持つ。
 const RC_ = (typeof RecordsCore !== 'undefined') ? RecordsCore : require('./records-core.js').RecordsCore;
 const SyncCore = {

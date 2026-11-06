@@ -1,4 +1,4 @@
-// KE30minutos  records.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  records.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：記録の「日付・完走・連続日数・月の集計・入力の確認」だけを行う部分（画面や保存を使わない）。（下の Records が保存と読み出しを行う）。
 const RecordsCore = {
   pad2_(n) { return n < 10 ? '0' + n : '' + n; },

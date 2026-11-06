@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- KE30minutos  index.html  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md -->
+<!-- KE30minutos  index.html  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md -->
 <html lang="ja">
 <head>
 <meta charset="utf-8">
@@ -192,6 +192,16 @@
       <div class="drive-btns">
         <button id="btnGasSave" class="btn-add" type="button" data-text="BTN_GAS_SAVE"></button>
         <button id="btnSyncNow" class="btn-sub" type="button" data-text="BTN_SYNC_NOW"></button>
+      </div>
+      <div class="drive-btns">
+        <button id="btnDriveFolders" class="btn-sub" type="button" data-text="DRIVE_FOLDERS_BTN" aria-controls="driveFolders" aria-expanded="false"></button>
+      </div>
+      <div id="driveFolders" class="drive-folders" hidden>
+        <div class="drive-btns">
+          <a id="linkDriveMain" class="btn-sub" target="_blank" rel="noopener noreferrer" hidden data-text="DRIVE_FOLDER_MAIN_LINK"></a>
+          <a id="linkDriveLast" class="btn-sub" target="_blank" rel="noopener noreferrer" hidden data-text="DRIVE_FOLDER_LAST_LINK"></a>
+        </div>
+        <p id="driveFoldersNote" class="status-line"></p>
       </div>
       <p id="syncLast" class="status-line"></p>
       <p id="syncStatus" class="status-line" style="margin-top:0"></p>

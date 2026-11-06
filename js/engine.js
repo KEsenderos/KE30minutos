@@ -1,4 +1,4 @@
-// KE30minutos  engine.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  engine.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：音の再生の土台（AudioContext と AudioWorklet の管理）、曲の長さの調べ方、次の曲の先読み（仕様書 第10章）
 const Engine = {
   ctx: null,

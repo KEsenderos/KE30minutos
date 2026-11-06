@@ -1,4 +1,4 @@
-// KE30minutos  ui.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  ui.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：画面の表示とボタンの受付（4つのタブ）。仕様書 第8章・第11-13節
 const UI = {
   el: {},
@@ -31,6 +31,7 @@ const UI = {
       'btnRecAdd', 'recForm', 'recFormDate', 'recFormTarget', 'recFormPlay', 'recFormDone', 'recFormError', 'btnRecSave', 'btnRecCancel',
       'setBackupWarn', 'btnTargetDown', 'targetValue', 'btnTargetUp', 'targetNote',
       'inGasUrl', 'inGasKey', 'btnGasSave', 'btnSyncNow', 'syncLast', 'syncStatus', 'syncGuard', 'syncGuardText', 'btnSyncGuardOk', 'btnSyncGuardNo', 'driveNote',
+      'btnDriveFolders', 'driveFolders', 'linkDriveMain', 'linkDriveLast', 'driveFoldersNote',
       'backupLast', 'btnBackupExport', 'btnBackupImport', 'fileInputBackup', 'backupNote', 'backupResult', 'appVersion2', 'howto',
     ];
     ids.forEach((id) => { this.el[id] = document.getElementById(id); });
@@ -140,6 +141,7 @@ const UI = {
     on('btnTargetUp', 'click', () => this.changeTarget_(KE.TARGET_MIN_STEP));
     on('btnGasSave', 'click', () => this.saveGas_());
     on('btnSyncNow', 'click', () => Sync.request('manual'));
+    on('btnDriveFolders', 'click', () => this.toggleDriveFolders_());
     on('btnSyncGuardOk', 'click', () => Sync.onGuardOk());
     on('btnSyncGuardNo', 'click', () => Sync.onGuardNo());
     on('btnBackupExport', 'click', () => Backup.exportAll());
@@ -392,7 +394,58 @@ const UI = {
     this.renderSettings();
     this.renderNow();
   },
-  renderDrive() { this.renderDrivePanel(); this.renderSyncStatus(); },
+  renderDrive() { this.renderDrivePanel(); this.renderSyncStatus(); this.renderDriveFolders_(); },
+
+  // ── ［このドライブを開く］（仕様書 第11-19節）──
+  foldersOpen_: false,
+  foldersBusy_: false,
+  foldersNote_: '',
+  async toggleDriveFolders_() {
+    if (this.foldersOpen_) { this.foldersOpen_ = false; this.foldersNote_ = ''; this.renderDriveFolders_(); return; }
+    this.foldersOpen_ = true;
+    this.foldersNote_ = '';
+    if (!Drive.isReady() || Drive.folderLinks()) { this.renderDriveFolders_(); return; }
+    if (this.isPlayingAny_()) { this.foldersNote_ = TEXT.DRIVE_FOLDERS_LOCKED; this.renderDriveFolders_(); return; }
+    this.foldersBusy_ = true;
+    this.renderDriveFolders_();
+    const res = await Drive.list();
+    this.foldersBusy_ = false;
+    if (!res.ok) {
+      this.foldersNote_ = Drive.errorText(res);
+    } else {
+      const notes = [];
+      let oldGas = false;
+      [['main', KE.DRIVE_FOLDER_MAIN], ['last', KE.DRIVE_FOLDER_LAST]].forEach(([k, name]) => {
+        if (!res[k].found) notes.push(Util.fill(TEXT.DRIVE_FOLDER_MISSING, { name }));
+        else if (!Drive.validFolderUrl_(res[k].url)) oldGas = true;
+      });
+      if (oldGas) notes.push(TEXT.DRIVE_FOLDERS_OLD_GAS);
+      this.foldersNote_ = notes.join(' ');
+    }
+    this.renderDriveFolders_();
+  },
+  renderDriveFolders_() {
+    const e = this.el;
+    if (!e.driveFolders) return;
+    e.driveFolders.hidden = !this.foldersOpen_;
+    e.btnDriveFolders.setAttribute('aria-expanded', this.foldersOpen_ ? 'true' : 'false');
+    const links = Drive.isReady() ? Drive.folderLinks() : null;
+    const setLink = (a, href) => {
+      if (href) { a.href = href; a.hidden = false; } else { a.removeAttribute('href'); a.hidden = true; }
+    };
+    setLink(e.linkDriveMain, links && links.main);
+    setLink(e.linkDriveLast, links && links.last);
+    let note = '';
+    if (!Drive.isReady()) note = TEXT.DRIVE_NEED_SETTINGS;
+    else if (this.foldersBusy_) note = TEXT.DRIVE_FOLDERS_LOADING;
+    else if (links) {
+      const miss = [];
+      if (!links.main) miss.push(Util.fill(TEXT.DRIVE_FOLDER_MISSING, { name: KE.DRIVE_FOLDER_MAIN }));
+      if (!links.last) miss.push(Util.fill(TEXT.DRIVE_FOLDER_MISSING, { name: KE.DRIVE_FOLDER_LAST }));
+      note = miss.join(' ');
+    } else note = this.foldersNote_;
+    e.driveFoldersNote.textContent = this.foldersOpen_ ? note : '';
+  },
   renderSyncStatus() {
     const e = this.el;
     if (!e.syncLast) return;
@@ -424,9 +477,12 @@ const UI = {
     }
     e.inGasKey.value = '';
     this.renderSettings();
+    this.foldersNote_ = '';
+    this.renderDriveFolders_();
     Sync.status = { kind: 'run', text: TEXT.SYNC_RUNNING };
     this.renderSyncStatus();
     const res = await Drive.list();
+    this.renderDriveFolders_();
     if (res.ok) {
       Sync.status = { kind: 'ok', text: Util.fill(TEXT.INFO_DRIVE_CONNECTED, { m: res.main.files.length, l: res.last.files.length }) };
       this.renderSyncStatus();

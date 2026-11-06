@@ -1,4 +1,4 @@
-// KE30minutos  session.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  session.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：1回の再生（曲順を決める → 順に鳴らす → 終わる）の流れ、時間の数え方、曲順の組み直し、記録の保存（仕様書 第11-2・11-4〜11-6・11-11節）
 const Session = {
   state: KE.STATE.IDLE,

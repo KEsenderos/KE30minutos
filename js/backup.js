@@ -1,4 +1,4 @@
-// KE30minutos  backup.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  backup.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：記録と曲の設定のバックアップの書き出し・読み込み、案内（仕様書 第11-12節）。曲のファイルは入れない。GASのURL・合言葉も入れない
 const Backup = {
   fileName_() { return 'ke30minutos-backup-' + RecordsCore.dayStr(Date.now(), 0) + '.json'; },

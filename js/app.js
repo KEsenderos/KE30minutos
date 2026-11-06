@@ -1,4 +1,4 @@
-// KE30minutos  app.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  app.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：起動処理、更新ボタン（ルールブック3-12）、起動時の確認（読み込み中に落ちた／途中で終了した再生）
 const App = {
   swRegistration: null,

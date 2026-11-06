@@ -1,4 +1,4 @@
-/* KE30minutos  style.css  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md */
+/* KE30minutos  style.css  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md */
 /* 役割：見た目（暗い背景＋緑のアクセント）。色は :root の名前つきの色だけを使う（仕様書 第6-3節・第8-5節） */
 
 :root {
@@ -351,6 +351,8 @@ input[type="range"]:disabled::-webkit-slider-thumb { opacity: 0.4; }
 .field { display: grid; gap: 4px; margin-top: 12px; font-weight: 600; }
 .field input { width: 100%; height: 48px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); font-size: 16px; padding: 0 12px; }
 .drive-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.drive-folders { margin-top: 4px; }
+a.btn-sub { text-decoration: none; }
 .status-line { color: var(--muted); line-height: 1.6; margin: 12px 0 0; overflow-wrap: anywhere; }
 .status-line.ok { color: var(--accent); }
 .status-line.bad { color: var(--danger-text); }

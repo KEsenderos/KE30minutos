@@ -1,4 +1,4 @@
-// KE30minutos  player.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  player.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：今の曲の状態と操作（読み込み、再生・一時停止、キー・速度、先読みと切り替え）。仕様書 第11-3・11-7・11-10節
 const Player = {
   songId: null,

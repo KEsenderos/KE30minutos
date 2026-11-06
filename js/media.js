@@ -1,4 +1,4 @@
-// KE30minutos  media.js  版 0.4.1  基づく仕様書：KE30minutos_仕様書_v0.4.1.md
+// KE30minutos  media.js  版 0.5  基づく仕様書：KE30minutos_仕様書_v0.5.md
 // 役割：無音のaudio要素（iPhoneに「再生中のアプリ」と認めさせ続ける）、ロック画面・イヤホンのボタン（仕様書 第12-1・12-2節）
 const MediaCtl = {
   silenceEl_: null,
